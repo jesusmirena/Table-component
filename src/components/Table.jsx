@@ -14,6 +14,9 @@ const Table = ({ tableHead, tableBody }) => {
             {Object.values(user).map((val) => (
               <td>{val}</td>
             ))}
+            <td>
+              <button>Edit</button>
+            </td>
           </tr>
         ))}
       </tbody>

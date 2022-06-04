@@ -6,6 +6,9 @@ import Table from "./components/Table";
 function App() {
   const [usersData, setUsersData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [usersPerPage, setUsersPerPage] = useState(10);
 
   const getUsers = async () => {
     const response = await axios.get(
@@ -20,7 +23,11 @@ function App() {
     getUsers();
   }, []);
 
-  const tableFormated = usersData?.map((user) => {
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = usersData?.slice(indexOfFirstUser, indexOfLastUser);
+
+  const tableFormated = currentUsers?.map((user) => {
     return {
       ["Fist Name"]: user.first_name,
       ["Last Name"]: user.last_name,
@@ -38,7 +45,6 @@ function App() {
       <h1>TABLA</h1>
       {!isLoading ? (
         <>
-          <Pagination />
           <Table
             tableHead={
               tableFormated[0] &&
@@ -46,7 +52,11 @@ function App() {
             }
             tableBody={tableFormated}
           />
-          <Pagination />
+          <Pagination
+            usersPerPage={usersPerPage}
+            allUsers={usersData.length}
+            setCurrentPage={setCurrentPage}
+          />
         </>
       ) : (
         <p>Loading ...</p>
