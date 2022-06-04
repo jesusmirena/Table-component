@@ -1,45 +1,58 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import axios from "axios";
+import { useEffect, useState } from "react";
+import Pagination from "./components/Pagination";
+import Table from "./components/Table";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [usersData, setUsersData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getUsers = async () => {
+    const response = await axios.get(
+      "https://random-data-api.com/api/users/random_user?size=30"
+    );
+    setUsersData(response.data);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    getUsers();
+  }, []);
+
+  const tableFormated = usersData?.map((user) => {
+    return {
+      ["Fist Name"]: user.first_name,
+      ["Last Name"]: user.last_name,
+      ["Username"]: user.username,
+      ["Email"]: user.email,
+
+      ["Gender"]: user.gender,
+      ["Phone Number"]: user.phone_number,
+      ["Date Of Birth"]: user.date_of_birth,
+    };
+  });
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+      <h1>TABLA</h1>
+      {!isLoading ? (
+        <>
+          <Pagination />
+          <Table
+            tableHead={
+              tableFormated[0] &&
+              Object.keys(tableFormated[0]).map((key) => key)
+            }
+            tableBody={tableFormated}
+          />
+          <Pagination />
+        </>
+      ) : (
+        <p>Loading ...</p>
+      )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
