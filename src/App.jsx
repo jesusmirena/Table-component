@@ -1,14 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import ModalForm from "./components/ModalForm";
 import Pagination from "./components/Pagination";
 import Table from "./components/Table";
+
+import { useModal } from "./hooks/useModal";
 
 function App() {
   const [usersData, setUsersData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
   const [usersPerPage, setUsersPerPage] = useState(10);
+
+  const { modal, openModal, closeModal } = useModal();
 
   const getUsers = async () => {
     const response = await axios.get(
@@ -29,32 +33,41 @@ function App() {
 
   const tableFormated = currentUsers?.map((user) => {
     return {
-      ["Fist Name"]: user.first_name,
-      ["Last Name"]: user.last_name,
-      ["Username"]: user.username,
-      ["Email"]: user.email,
-
-      ["Gender"]: user.gender,
-      ["Phone Number"]: user.phone_number,
-      ["Date Of Birth"]: user.date_of_birth,
+      ["id"]: user.id,
+      ["first_name"]: user.first_name,
+      ["last_name"]: user.last_name,
+      ["username"]: user.username,
+      ["email"]: user.email,
+      ["gender"]: user.gender,
+      ["phone_number"]: user.phone_number,
+      ["date_of_birth"]: user.date_of_birth,
     };
   });
 
   return (
     <div className="App">
       <h1>TABLA</h1>
+
       {!isLoading ? (
         <>
+          {modal && (
+            <ModalForm
+              closeModal={closeModal}
+              usersData={usersData}
+              setUsersData={setUsersData}
+            />
+          )}
           <Table
             tableHead={
               tableFormated[0] &&
               Object.keys(tableFormated[0]).map((key) => key)
             }
             tableBody={tableFormated}
+            openModal={openModal}
           />
           <Pagination
             usersPerPage={usersPerPage}
-            allUsers={usersData.length}
+            usersAmount={usersData.length}
             setCurrentPage={setCurrentPage}
           />
         </>
