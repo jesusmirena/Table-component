@@ -64,6 +64,8 @@ function App() {
             }
             tableBody={tableFormated}
             openModal={openModal}
+            usersData={usersData}
+            setUsersData={setUsersData}
           />
           <Pagination
             usersPerPage={usersPerPage}
