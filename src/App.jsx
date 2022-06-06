@@ -12,13 +12,13 @@ function App() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage, setUsersPerPage] = useState(5);
+  const [usersPerPage, setUsersPerPage] = useState(15);
 
   const { modal, openModal, closeModal } = useModal();
 
   const getUsers = async () => {
     const response = await axios.get(
-      "https://random-data-api.com/api/users/random_user?size=30"
+      "https://random-data-api.com/api/users/random_user?size=50"
     );
     setUsersData(response.data);
     setIsLoading(false);
@@ -29,6 +29,7 @@ function App() {
     getUsers();
   }, []);
 
+  //Calculating users for pagination
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = usersData?.slice(indexOfFirstUser, indexOfLastUser);
@@ -59,6 +60,13 @@ function App() {
               setUsersData={setUsersData}
             />
           )}
+
+          <Pagination
+            usersPerPage={usersPerPage}
+            usersAmount={usersData.length}
+            setCurrentPage={setCurrentPage}
+          />
+
           <Table
             tableHead={
               tableFormated[0] &&
@@ -68,11 +76,6 @@ function App() {
             openModal={openModal}
             usersData={usersData}
             setUsersData={setUsersData}
-          />
-          <Pagination
-            usersPerPage={usersPerPage}
-            usersAmount={usersData.length}
-            setCurrentPage={setCurrentPage}
           />
         </>
       ) : (
