@@ -2,15 +2,17 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ModalForm from "./components/ModalForm";
 import Pagination from "./components/Pagination";
+import Container from "./components/styledComponents/Container.styled";
 import Table from "./components/Table";
 
 import { useModal } from "./hooks/useModal";
 
 function App() {
   const [usersData, setUsersData] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage, setUsersPerPage] = useState(10);
+  const [usersPerPage, setUsersPerPage] = useState(5);
 
   const { modal, openModal, closeModal } = useModal();
 
@@ -45,8 +47,8 @@ function App() {
   });
 
   return (
-    <div className="App">
-      <h1>TABLA</h1>
+    <Container general className="App">
+      <h1>OnRoadTS Test</h1>
 
       {!isLoading ? (
         <>
@@ -76,7 +78,7 @@ function App() {
       ) : (
         <p>Loading ...</p>
       )}
-    </div>
+    </Container>
   );
 }
 

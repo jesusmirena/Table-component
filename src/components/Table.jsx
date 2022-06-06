@@ -1,6 +1,16 @@
 import React, { useState } from "react";
+import { useModal } from "../hooks/useModal";
+import StyledButton from "./styledComponents/Button.styled";
+import Container from "./styledComponents/Container.styled";
+import StyledTable from "./styledComponents/Table.styled";
 
-const Table = ({ tableHead, tableBody, openModal }) => {
+const Table = ({
+  tableHead,
+  tableBody,
+  openModal,
+  usersData,
+  setUsersData,
+}) => {
   const [filters, setFilters] = useState({
     ["id"]: "",
     ["first_name"]: "",
@@ -12,11 +22,23 @@ const Table = ({ tableHead, tableBody, openModal }) => {
     ["date_of_birth"]: "",
   });
 
-  const handleChange = (e) => {
+  const handleFiltersChange = (e) => {
     setFilters({
       ...filters,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleDelete = (id) => {
+    if (usersData.length < 6) {
+      alert("You can't delete more users, there's only five left");
+    } else {
+      const response = confirm("Do you want to delete this user?");
+      if (response) {
+        const updatedUsers = usersData.filter((user) => user.id !== id);
+        setUsersData(updatedUsers);
+      }
+    }
   };
 
   const filterCriteria = (obj) => {
@@ -36,39 +58,51 @@ const Table = ({ tableHead, tableBody, openModal }) => {
   };
 
   return (
-    <table>
-      <thead>
-        <tr key={"header"}>
-          {tableHead &&
-            tableHead?.map((key) => (
-              <th>
-                {key}
-                {key !== "id" && (
-                  <input
-                    onChange={(e) => handleChange(e)}
-                    name={key}
-                    type="text"
-                  />
-                )}
-              </th>
-            ))}
-        </tr>
-      </thead>
-      <tbody>
-        {tableBody
-          .filter((user) => filterCriteria(user))
-          .map((user) => (
-            <tr key={user.id}>
-              {Object.values(user).map((val) => (
-                <td key={val}>{val}</td>
+    <Container table>
+      <StyledTable>
+        <thead>
+          <tr key={"header"}>
+            <th>Actions</th>
+            {tableHead &&
+              tableHead?.map((key) => (
+                <th>
+                  {key}
+                  {key !== "id" && (
+                    <input
+                      onChange={(e) => handleFiltersChange(e)}
+                      placeholder={"filter by " + key}
+                      name={key}
+                      type="text"
+                    />
+                  )}
+                </th>
               ))}
-              <td>
-                <button onClick={() => openModal(user)}>Edit</button>
-              </td>
-            </tr>
-          ))}
-      </tbody>
-    </table>
+          </tr>
+        </thead>
+        <tbody>
+          {tableBody
+            .filter((user) => filterCriteria(user))
+            .map((user) => (
+              <tr key={user.id}>
+                <td>
+                  <Container buttonsTable>
+                    <StyledButton red onClick={() => handleDelete(user.id)}>
+                      Delete
+                    </StyledButton>
+
+                    <StyledButton blue onClick={() => openModal(user)}>
+                      Edit
+                    </StyledButton>
+                  </Container>
+                </td>
+                {Object.values(user).map((val) => (
+                  <td key={val}>{val}</td>
+                ))}
+              </tr>
+            ))}
+        </tbody>
+      </StyledTable>
+    </Container>
   );
 };
 

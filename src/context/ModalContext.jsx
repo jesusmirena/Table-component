@@ -4,6 +4,7 @@ const Context = React.createContext({});
 
 export function ModalContextProvider({ children }) {
   const [isModalHidden, setIsModalHidden] = useState(false);
+
   const [userForm, setUserForm] = useState({
     ["first_name"]: "",
     ["last_name"]: "",
