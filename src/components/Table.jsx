@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useModal } from "../hooks/useModal";
 import StyledButton from "./styledComponents/Button.styled";
 import Container from "./styledComponents/Container.styled";
 import StyledTable from "./styledComponents/Table.styled";

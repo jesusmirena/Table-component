@@ -13,6 +13,7 @@ const ModalForm = ({ closeModal, usersData, setUsersData }) => {
 
   useEffect(() => {
     return () => {
+      //Cleaning state when unmounting
       setUserForm({
         ["first_name"]: "",
         ["last_name"]: "",
@@ -106,6 +107,7 @@ const ModalForm = ({ closeModal, usersData, setUsersData }) => {
                 Hide form
               </StyledButton>
             </Container>
+
             <fieldset>
               <div>
                 <label htmlFor="first_name">First name</label>
@@ -200,6 +202,7 @@ const ModalForm = ({ closeModal, usersData, setUsersData }) => {
               {formik.errors.date_of_birth ? (
                 <div>{formik.errors.date_of_birth}</div>
               ) : null}
+
               <StyledButton blue type="submit">
                 Save changes
               </StyledButton>
